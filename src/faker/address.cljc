@@ -1,6 +1,8 @@
 (ns faker.address
   "Create fake address data."
-  (:require [faker.name :as na]
+  (:refer-clojure :exclude [rand-nth rand-int])
+  (:require [faker.random :refer [rand-nth rand-int]]
+            [faker.name :as na]
             [faker.address-data :as ad]
             [clojure.string :as string]))
 
@@ -97,4 +99,3 @@
   "Return a random UK postcode."
   []
   (string/upper-case (letterify (numerify "??# #??" "??## #??"))))
-

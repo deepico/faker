@@ -6,28 +6,28 @@
      [clojure.string :only (split)]))
 
 (deftest test-name-generation
-  (is (names))
+  (is (names 1))
   (is (first-name))
   (is (last-name))
   (is (prefix))
   (is (suffix))
-  (let [many (map #(split % #" ") (take 10000 (names)))
+  (let [many (map #(split % #" ") (names 10000))
         count-simple (count (filter #(= 2 (count %)) many))]
     (is (and (> count-simple 7000) (< count-simple 9000)))))
 
 (deftest test-lorem-generation
-  (is (take 10 (words)))
-  (is (take 10 (sentences)))
-  (is (take 10 (paragraphs))))
+  (is (words 10))
+  (is (sentences 10))
+  (is (paragraphs 10)))
 
 (deftest test-phone-numbers
-  (is (take 10 (phone-numbers))))
+  (is (phone-numbers 10)))
 
 (deftest test-company
   (is (company/suffix))
   (is (company/catch-phrase))
   (is (company/bs))
-  (is (take 10 (company/names))))
+  (is (company/names 10)))
 
 (deftest test-internet
   (is (domain-suffix))

@@ -1,9 +1,10 @@
 (ns faker.internet
   "Generate fake domains and emails."
-  (:require
-     [clojure.string :as string]
-     [faker.company :as co]
-     [faker.name :as na]))
+  (:refer-clojure :exclude [rand-nth rand-int])
+  (:require [faker.random :refer [rand-nth rand-int]]
+            [clojure.string :as string]
+            [faker.company :as co]
+            [faker.name :as na]))
 
 (def ^{:private true} suffixes ["co.uk" "com" "us" "uk" "ca" "biz" "info" "name"])
 
@@ -15,7 +16,7 @@
 (defn domain-word
   "Return a random domain name, like a main company name."
   []
-  (-> (first (co/names))
+  (-> (first (co/names 1))
     (string/split #" ")
     first
     (string/replace #"\W" "")
@@ -32,8 +33,8 @@
 (def ^{:private true} formats
   [#(string/lower-case (clean (na/first-name)))
    #(string/lower-case (string/join (rand-nth ["." "-"])
-                                    [(clean (na/first-name))
-                                     (clean (na/last-name))]))])
+                         [(clean (na/first-name))
+                          (clean (na/last-name))]))])
 
 (defn user-name
   "Return a random user name for email address."
@@ -60,8 +61,9 @@
   ([name] (str (user-name name) "@" (rand-nth free-domains))))
 
 (defn emails
-  "Lazy sequence of random emails."
-  []
-  (repeatedly
-    (fn []
-      ((rand-nth [free-email email])))))
+  "seq of `n` random emails."
+  [n]
+  (doall
+    (repeatedly n
+      (fn []
+        ((rand-nth [free-email email]))))))

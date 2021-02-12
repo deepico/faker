@@ -1,6 +1,8 @@
 (ns faker.name
   "Create fake data for person names"
-  (:require [clojure.string :refer [join]]
+  (:refer-clojure :exclude [rand rand-nth rand-int])
+  (:require [faker.random :refer [rand rand-nth rand-int]]
+            [clojure.string :refer [join]]
             [faker.name-data :as nd]))
 
 (defn first-name
@@ -31,13 +33,14 @@
    [(comb first-name last-name suffix) 0.2]
    [(comb first-name last-name) 1]])
 
-(defn- one-name []
+(defn one-name []
   (let [p (rand)]
     (some #(and (> (last %) p)
                 ((first %)))
           format-probs)))
 
 (defn names
-  "Lazy sequence of random names"
-  []
-  (repeatedly one-name))
+  "Sequence of `n` random names"
+  [n]
+  (doall
+    (repeatedly n one-name)))

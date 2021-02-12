@@ -1,6 +1,8 @@
 (ns faker.company
   "Create fake company data"
-  (:require [faker.name :as fkname]
+  (:refer-clojure :exclude [rand-nth rand-int])
+  (:require [faker.random :refer [rand-nth rand-int]]
+            [faker.name :as fkname]
             [clojure.string :refer [join]]
             [faker.company-data :as cd]))
 
@@ -23,13 +25,13 @@
   (phrase cd/bs-words))
 
 (def ^{:private true} formats
-  [#(str (first (fkname/names)) " " (suffix))
+  [#(str (first (fkname/names 1)) " " (suffix))
    #(str (fkname/last-name) "-" (fkname/last-name))
    #(format "%s, %s and %s" (fkname/last-name) (fkname/last-name) (fkname/last-name))])
 
-
-(defn names []
-  "Lazy sequence of random company names"
-  (repeatedly
-    (fn []
-      ((rand-nth formats)))))
+(defn names [n]
+  "seq of `n` random company names"
+  (doall
+    (repeatedly n
+      (fn []
+        ((rand-nth formats))))))
